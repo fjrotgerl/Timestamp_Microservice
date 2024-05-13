@@ -1,22 +1,28 @@
 const express = require("express");
 const app = express();
+
+var cors = require('cors');
+app.use(cors({optionsSuccessStatus: 200}));
+
 const port = 3000;
 
 app.get("/api/:date", (req,res) => {
     let inputDate = req.params.date;
-    let unix = "";
-    let utc = "";
+    let unixTime = "";
+    let utcTime = "";
     if (inputDate.includes("-")) {
-        unix = Math.floor(new Date(req.params.date).getTime())
-        utc = new Date(inputDate).toUTCString();
+        unixTime = Math.floor(new Date(req.params.date).getTime())
+        utcTime = new Date(inputDate).toUTCString();
+    } else if(inputDate == "") {
+        
     } else {
-        unix = inputDate;
+        unixTime = inputDate;
         let aux = new Date(0);
         aux.setUTCMilliseconds(req.params.date);
-        utc = aux.toUTCString();
+        utcTime = aux.toUTCString();
     }
 
-    res.send({"unix": unix, "utc": utc})
+    res.json({unix: unixTime, utc: utcTime})
 })
 
 app.listen(port, () => {
